@@ -1,0 +1,15 @@
+{
+  "main": "src/index.js",
+  "name": "jswind",
+  "version": "2.0.1",
+  "description": "Open Desktop Windows From Node.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "window",
+    "desktop"
+  ],
+  "author": "ephf",
+  "license": "ISC"
+}
