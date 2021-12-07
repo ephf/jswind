@@ -1,0 +1,6 @@
+{
+  "package.json": "{\"main\":\"index.js\",\"scripts\":{\"pkg\":\"npx pkg index.js\"}}",
+  "jswind/package.json": "{\"main\":\"index.js\"}",
+  ".gitignore": "# JSWind\n.gitignore\ninstances",
+  "index.js": "const DesktopWindow = require('./jswind');"
+}

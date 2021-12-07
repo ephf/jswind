@@ -1,7 +1,8 @@
 {
   "main": "src/index.js",
   "name": "jswind",
-  "version": "0.0.2",
+  "version": "0.0.3",
+  "bin": "bin/jswind.js",
   "description": "Open Desktop Windows From Node.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

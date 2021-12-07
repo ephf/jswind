@@ -10,7 +10,7 @@
 
 In your command line, run:
 
-```terminal
+```bash
 $ npm install jswind
 ```
 
@@ -75,3 +75,46 @@ window.addEvent("getText", () => {
 Then when I run the file, I'll get:
 
 <img src="assets/example2.png" />
+
+You can also use built in events from outside of this window using `.on`:
+
+```js
+window.on("event", function callback() {});
+```
+
+<table>
+  <tr>
+    <th>Events</th>
+  </tr>
+  <tr>
+    <td><code>close</code></td>
+    <td>When the window closes, can exit the process by adding <code>DesktopWindow.EXIT_ON_CLOSE</code></td>
+  </tr>
+</table>
+
+### Executables (pkg)
+
+You can create a JSWind project by running jswind on `npx`:
+
+```bash
+$ npx jswind
+```
+
+You should have a directory like this:
+
+```
+> instances
+> jswind
+> src
+# .gitignore
+# index.js
+# package.json
+```
+
+Start your code in `index.js`. Everything works the same accept instead of inputting functions when creating a new `DesktopWindow`, you put in strings of functions. _this is because `Function.toString()` in an executable will turn into `"[ native code ]"`_
+
+You can run the pkg script to turn the project into an executable:
+
+```bash
+$ npm run pkg
+```

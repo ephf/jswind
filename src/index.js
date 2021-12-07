@@ -1,5 +1,5 @@
 const http = require("http");
-const { exec, execSync } = require("child_process");
+const { exec } = require("child_process");
 const {
   readFileSync,
   writeFileSync,
@@ -49,21 +49,27 @@ class DesktopWindow {
     const proc = exec(`${instanceDir}in${instances}.hta`);
     this.process = proc;
     this.instance = instances;
-    proc.on("exit", () => unlinkSync(`${instanceDir}in${this.instance}.hta`));
+    proc.on("exit", () => {
+      unlinkSync(`${instanceDir}in${this.instance}.hta`);
+      this.on._events?.close?.forEach((event) => {
+        event();
+      });
+    });
   }
 
   addEvent(name, callback) {
     this._events[name] = callback;
   }
+
+  on(name, callback) {
+    if (!this.on._events)
+      this.on._events = {
+        close: [],
+      };
+    this.on._events[name].push(callback);
+  }
 }
 
-// function open(control) {
-//   const hta = readFileSync(`${srcDir}index.hta`, "utf-8").replace(
-//     /1%1/,
-//     `(${control.toString()})();`
-//   );
-//   writeFileSync(`${instanceDir}in${++instances}.hta`, hta);
-//   exec(`${instanceDir}in${instances}.hta`);
-// }
+DesktopWindow.EXIT_ON_CLOSE = process.exit;
 
 module.exports = DesktopWindow;
