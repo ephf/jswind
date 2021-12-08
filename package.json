@@ -1,7 +1,7 @@
 {
   "main": "src/index.js",
   "name": "jswind",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "bin": "bin/jswind.js",
   "description": "Open Desktop Windows From Node.js",
   "scripts": {

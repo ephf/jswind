@@ -26,10 +26,15 @@ class DesktopWindow {
   /** @private */
   _events = {};
 
-  constructor(control, title) {
+  constructor(control, title, imports) {
     instances++;
     this.control = control;
+    let importString = "";
+    imports?.forEach((im) => {
+      importString += `import ${im.import} from "../../../${im.from}";\n`;
+    });
     const hta = readFileSync(`${srcDir}index.hta`, "utf-8")
+      .replace(/0%0/, `${importString}\n`)
       .replace(/1%1/, `(${control.toString()})();`)
       .replace(/%title%/, `${title ?? `Window ${instances}`}`)
       .replace(/%port%/, 3000 + instances);

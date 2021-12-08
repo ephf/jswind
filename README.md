@@ -92,6 +92,23 @@ window.on("event", function callback() {});
   </tr>
 </table>
 
+### imports
+
+Because of code above the normal function, imports aren't added inside the control function. Instead they are an optional argument:
+
+```js
+new DesktopWindow(() => {}, "JSWind", [
+  {
+    import: "{ value }",
+    from: "script",
+  },
+]);
+
+// import { value } from "script";
+```
+
+Just remember that the `from` is from the root directory where the `node_modules` folder is.
+
 ### Executables (pkg)
 
 You can create a JSWind project by running jswind on `npx`:
@@ -111,7 +128,11 @@ You should have a directory like this:
 # package.json
 ```
 
-Start your code in `index.js`. Everything works the same accept instead of inputting functions when creating a new `DesktopWindow`, you put in strings of functions. _this is because `Function.toString()` in an executable will turn into `"[ native code ]"`_
+Start your code in `index.js`. Everything works the same accept for a few things:
+
+- instead of inputting functions when creating a new `DesktopWindow`, you put in strings of functions. _this is because `Function.toString()` in an executable will turn into `"[ native code ]"`_
+
+- The import base directory will be the `src` file.
 
 You can run the pkg script to turn the project into an executable:
 

@@ -1,5 +1,5 @@
 {
-  "package.json": "{\"main\":\"index.js\",\"scripts\":{\"pkg\":\"npx pkg index.js\"}}",
+  "package.json": "{\"main\":\"index.js\",\"scripts\":{\"pkg\":\"npx pkg -t node14-win-x64 index.js\"},\"pkg\":{\"scripts\":\"src/*\"}}",
   "jswind/package.json": "{\"main\":\"index.js\"}",
   ".gitignore": "# JSWind\n.gitignore\ninstances",
   "index.js": "const DesktopWindow = require('./jswind');"
