@@ -25,14 +25,25 @@ const DesktopWindow = require("jswind");
 `DesktopWindow` is a class that creates, you guessed it, desktop windows. Create one by creating a new instance of `DesktopWindow` and adding a control function, and an optional title:
 
 ```js
-const window = new DesktopWindow(() => {
-  alert("Hello World!");
-}, "Hello From Node.js");
+const window = new DesktopWindow({
+  control: () => {
+    alert("Hello World!");
+  },
+  title: "Hello From Node.js",
+});
 ```
 
 you will get something like this:
 
 <img src="assets/example1.png" />
+
+You can also create a new file and use that as the control:
+
+```js
+const window = new DesktopWindow({
+  control: "path/to/file",
+});
+```
 
 The control function is like JavaScript running in the browser, you have full access to the dom. But what if you want to write a file, or create an http server?
 
@@ -62,9 +73,11 @@ Then I will create the following code to alert the text in the file:
 const DesktopWindow = require("jswind");
 const { readFileSync } = require("fs");
 
-const window = new DesktopWindow(async () => {
-  const text = await eventSend("getText");
-  alert(text);
+const window = new DesktopWindow({
+  control: async () => {
+    const text = await eventSend("getText");
+    alert(text);
+  },
 });
 
 window.addEvent("getText", () => {
@@ -97,14 +110,22 @@ window.on("event", function callback() {});
 Because of code above the normal function, imports aren't added inside the control function. Instead they are an optional argument:
 
 ```js
-new DesktopWindow(() => {}, "JSWind", [
-  {
-    import: "{ value }",
-    from: "script",
-  },
-]);
+new DesktopWindow({
+  control: () => {},
+  title: "JSWind",
+  imports: [
+    {
+      import: "{ value }",
+      from: "script",
+    },
+    {
+      import: "script",
+    },
+  ],
+});
 
 // import { value } from "script";
+// import "script";
 ```
 
 Just remember that the `from` is from the root directory where the `node_modules` folder is.
@@ -130,7 +151,7 @@ You should have a directory like this:
 
 Start your code in `index.js`. Everything works the same accept for a few things:
 
-- instead of inputting functions when creating a new `DesktopWindow`, you put in strings of functions. _this is because `Function.toString()` in an executable will turn into `"[ native code ]"`_
+- you can only use a filepath for the control function in `DesktopWindow`. _this is because `Function.toString()` in an executable will turn into `"[ native code ]"`_
 
 - The import base directory will be the `src` file.
 

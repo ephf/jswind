@@ -1,6 +1,6 @@
 const http = require("http");
 const { exec, execSync } = require("child_process");
-const { writeFileSync, unlinkSync } = require("fs");
+const { writeFileSync, unlinkSync, readFileSync } = require("fs");
 
 execSync("cd jswind && hide.exe");
 
@@ -10,16 +10,22 @@ class DesktopWindow {
   /** @private */
   _events = {};
 
-  constructor(control, title, imports) {
+  constructor(options) {
     instances++;
-    this.control = control;
     let importString = "";
-    imports?.forEach((im) => {
-      importString += `import ${im.import} from "../src/${im.from}";\n`;
+    options.imports?.forEach((im) => {
+      importString += `import ${im.import}${
+        im.from ? ` from "../src/${im.from}";` : ";"
+      }\n`;
     });
     const hta = `<!DOCTYPE html><html> <head> <meta http-equiv="x-ua-compatible" content="ie=11" /> <title>${
-      title ?? `Window ${instances}`
-    }</title> <script src="https://unpkg.com/modern-hta">${importString}\n window.eventSend = async (event, content) => { window.eventSend.event = event; window.eventSend.content = content; return new Promise((resolve, reject) => { let active = true; setInterval(() => { if(window.eventSend.response !== undefined && active) { resolve(window.eventSend.response); window.eventSend.response = undefined; active = false; } }) }) }; \n(${control})();\n </script> </head> <body> <script> setInterval(function () { if (window.eventSend.event) { const xhr = new XMLHttpRequest(); xhr.addEventListener("load", function () { if (this.responseText) { window.eventSend.response = JSON.parse(this.responseText); } else { window.eventSend.response = null; } }); xhr.open("POST", "http://localhost:${
+      options.title ?? `Window ${instances}`
+    }</title><style>${
+      options.style ? readFileSync(options.style) : ""
+    }</style><script src="https://unpkg.com/modern-hta">${importString}\n window.eventSend = async (event, content) => { window.eventSend.event = event; window.eventSend.content = content; return new Promise((resolve, reject) => { let active = true; setInterval(() => { if(window.eventSend.response !== undefined && active) { resolve(window.eventSend.response); window.eventSend.response = undefined; active = false; } }) }) }; \n${readFileSync(
+      options.control,
+      "utf-8"
+    )}\n </script> </head> <body> <script> setInterval(function () { if (window.eventSend.event) { const xhr = new XMLHttpRequest(); xhr.addEventListener("load", function () { if (this.responseText) { window.eventSend.response = JSON.parse(this.responseText); } else { window.eventSend.response = null; } }); xhr.open("POST", "http://localhost:${
       3000 + instances
     }/" + window.eventSend.event); xhr.send(JSON.stringify(window.eventSend.content)); window.eventSend.content = false; window.eventSend.event = false; } }); </script> </body></html>`;
     writeFileSync(`instances/in${instances}.hta`, hta);

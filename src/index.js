@@ -26,17 +26,24 @@ class DesktopWindow {
   /** @private */
   _events = {};
 
-  constructor(control, title, imports) {
+  constructor(options) {
     instances++;
-    this.control = control;
     let importString = "";
-    imports?.forEach((im) => {
-      importString += `import ${im.import} from "../../../${im.from}";\n`;
+    options.imports?.forEach((im) => {
+      importString += `import ${im.import}${
+        im.from ? ` from "../../../${im.from}";` : ";"
+      }\n`;
     });
     const hta = readFileSync(`${srcDir}index.hta`, "utf-8")
       .replace(/0%0/, `${importString}\n`)
-      .replace(/1%1/, `(${control.toString()})();`)
-      .replace(/%title%/, `${title ?? `Window ${instances}`}`)
+      .replace(
+        /1%1/,
+        typeof options.control == "function"
+          ? `(${options.control.toString()})();`
+          : `${readFileSync(options.control, "utf-8")}`
+      )
+      .replace(/%title%/, `${options.title ?? `Window ${instances}`}`)
+      .replace(/%style%/, `${options.style ? readFileSync(options.style) : ""}`)
       .replace(/%port%/, 3000 + instances);
     writeFileSync(`${instanceDir}in${instances}.hta`, hta);
     const server = http.createServer((req, res) => {

@@ -3,6 +3,9 @@
   <head>
     <meta http-equiv="x-ua-compatible" content="ie=11" />
     <title>%title%</title>
+    <style>
+      %style%
+    </style>
     <script src="https://unpkg.com/modern-hta">
       0%0
       window.eventSend = async (event, content) => {
@@ -25,7 +28,7 @@
   <body>
     <script>
       setInterval(function () {
-        if (window.eventSend.event) {
+        if (window.eventSend && window.eventSend.event) {
           const xhr = new XMLHttpRequest();
           xhr.addEventListener("load", function () {
             if (this.responseText) {
